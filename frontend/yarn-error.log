@@ -28,7 +28,7 @@ Trace:
 
 npm manifest: 
   {
-    "name": "confusion",
+    "name": "frontend",
     "version": "0.1.0",
     "private": true
   }

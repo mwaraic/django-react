@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react"
 import { Form, Button, Card, Alert, Container } from "react-bootstrap"
-import { Link, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 
 export default function Login() {
   const emailRef = useRef()
@@ -37,11 +37,11 @@ export default function Login() {
       style={{ minHeight: "100vh" }}
     >
         <div className="w-100" style={{ maxWidth: "400px" }}>
-      <Card bg="success">
+      <Card bg="dark">
 
         <Card.Body>
         <div style={{margin: 30}}>
-        <h2 className="text-center mb-4" style={{color: "white"}} ><img  style={{ height : 55, width: 60, marginLeft: 5, marginRight: 5}} src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Globe_icon-white.svg/1024px-Globe_icon-white.svg.png" alt=""/>My Web Feed</h2>
+        <h2 className="text-center mb-4" style={{color: "white"}} ><img  style={{ height : 90, width: 95, marginLeft: 5, marginRight: 5}} src="https://iwillbeyourphotoguide.com/wp-content/uploads/2018/11/camera-settings-icon-white.png" alt=""/></h2>
          </div>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
@@ -54,15 +54,13 @@ export default function Login() {
               <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
             <div className="text-center" style={{marginTop:25}}>
-            <Button variant="dark" disabled={loading} className="w-100" type="submit">
+            <Button variant="light" disabled={loading} className="w-100" type="submit">
               Log In
             </Button></div>
           </Form>
           
         </Card.Body>
-      </Card><div className="w-100 text-center mt-3">
-            <Link to="/forgot-password">Forgot Password?</Link>
-          </div></div></Container>
+      </Card></div></Container>
     </>
   )
 }
