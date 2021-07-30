@@ -1,0 +1,8 @@
+django-admin startproject <name>
+
+cd <name>
+
+python3 manage.py startapp <name>
+
+python3 manage.py runserver
+
