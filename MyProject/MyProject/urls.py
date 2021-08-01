@@ -13,23 +13,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+from api_basic.views import CustomUserCreate
 from django.contrib import admin
-from django.urls import path, include
-from api_basic.views import GenericAPIView, article_list
-from api_basic.views import article_detail
-from api_basic.views import ArticleAPIView
-from api_basic.views import ArticleViewSet
-from api_basic.views import DetailAPIView
-import dj_rest_auth
+from django.urls import path,include
+from api_basic.views import ArticleViewSet, CustomTokenObtainPairView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('article/', ArticleAPIView.as_view()),
-    path('sets/', ArticleViewSet.as_view({'get':'list', 'post':'create'})),
-    path('sets/<int:pk>', ArticleViewSet.as_view({'get':'retrieve','put':'update', 'delete':'destroy'})),
-    path('article/<int:id>', DetailAPIView.as_view()),
-    path('generic/article/', GenericAPIView.as_view()),
-    path('generic/article/<int:id>', GenericAPIView.as_view()),
-    path('account/', include('dj_rest_auth.urls'))
+    path('api/article/', ArticleViewSet.as_view({'get':'list', 'post':'create'})),
+    path('api/article/<int:pk>', ArticleViewSet.as_view({'get':'retrieve','put':'update', 'delete':'destroy'})),
+    path('api/auth/register/', CustomUserCreate.as_view()),
+    path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
 ]
