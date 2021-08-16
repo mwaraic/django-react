@@ -3,11 +3,11 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
-import { register } from "../actions/auth";
+import AuthService from "../services/auth.service";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { Redirect } from "react-router";
+import UserService from "../services/user.service";
+import { Redirect } from "react-router-dom";
+
 const required = (value) => {
   if (!value) {
     return (
@@ -28,94 +28,80 @@ const validEmail = (value) => {
   }
 };
 
-const vusername = (value) => {
-  if (value.length < 3 || value.length > 20) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The username must be between 3 and 20 characters.
-      </div>
-    );
-  }
-};
 
-const vpassword = (value) => {
-  if (value.length < 6 || value.length > 40) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The password must be between 6 and 40 characters.
-      </div>
-    );
-  }
-};
-
-const Register = (props) => {
+const AddArticle = (props) => {
+  const currentUser = AuthService.getCurrentUser();
   const form = useRef();
   const checkBtn = useRef();
   const history=useHistory();
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
   const [successful, setSuccessful] = useState(false);
-  const { message } = useSelector(state => state.message);
-  const { isLoggedIn } = useSelector(state => state.auth);
-  const dispatch = useDispatch();
-
-  const onChangeUsername = (e) => {
-    const username = e.target.value;
-    setUsername(username);
-  };
+  const [message, setMessage] = useState("");
 
   const onChangeEmail = (e) => {
     const email = e.target.value;
     setEmail(email);
   };
 
-  const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
+  const onChangeTitle = (e) => {
+    const title = e.target.value;
+    setTitle(title);
   };
 
-  const handleRegister = (e) => {
+  const onChangeBody = (e) => {
+    const Body = e.target.value;
+    setBody(Body);
+  };
+
+  const handleArticle = (e) => {
     e.preventDefault();
 
+    setMessage("");
     setSuccessful(false);
 
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      dispatch(register(username, email, password)).then(
-        () => {
+      UserService.addArticle(currentUser.id,title, email, body).then(
+        (response) => {
+          setMessage(response.data.message);
           setSuccessful(true);
-          history.push('/login')
-        }).catch(()=>{
+          history.push('/main')
+        },
+        (error) => {
+          const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          setMessage(resMessage);
           setSuccessful(false);
-        });
-      }
+        }
+      );
     }
-    if (isLoggedIn) {
-      return <Redirect to="/profile" />;
-    }
+  };
+  if(!currentUser){
+    return(
+    <Redirect to="/login"/>
+    )}
   return (
     <div className="col-md-12">
       <div className="card card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
-
-        <Form onSubmit={handleRegister} ref={form}>
+        <Form onSubmit={handleArticle} ref={form}>
           {!successful && (
             <div>
               <div className="form-group">
-                <label htmlFor="username">Username</label>
+                <label htmlFor="title">Title</label>
                 <Input
                   type="text"
                   className="form-control"
-                  name="username"
-                  value={username}
-                  onChange={onChangeUsername}
-                  validations={[required, vusername]}
+                  name="title"
+                  value={title}
+                  onChange={onChangeTitle}
                 />
               </div>
 
@@ -132,19 +118,18 @@ const Register = (props) => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="body">Body</label>
                 <Input
-                  type="password"
+                  type="text"
                   className="form-control"
-                  name="password"
-                  value={password}
-                  onChange={onChangePassword}
-                  validations={[required, vpassword]}
+                  name="body"
+                  value={body}
+                  onChange={onChangeBody}
                 />
               </div>
 
               <div className="form-group">
-                <button className="btn btn-primary btn-block">Sign Up</button>
+                <button className="btn btn-primary btn-block">Add</button>
               </div>
             </div>
           )}
@@ -168,4 +153,4 @@ const Register = (props) => {
   );
 };
 
-export default Register;
+export default AddArticle;

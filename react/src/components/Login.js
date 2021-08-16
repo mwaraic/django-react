@@ -2,9 +2,10 @@ import React, { useState, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-
-import AuthService from "../services/auth.service";
+import { login } from "../actions/auth";
 import { Redirect } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const required = (value) => {
   if (!value) {
@@ -17,15 +18,15 @@ const required = (value) => {
 };
 
 const Login = (props) => {
-  const currentUser = AuthService.getCurrentUser();
   const form = useRef();
   const checkBtn = useRef();
-
+  const dispatch = useDispatch();
   
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const { isLoggedIn } = useSelector(state => state.auth);
+  const { message } = useSelector(state => state.message);
 
   const onChangeUsername = (e) => {
     const username = e.target.value;
@@ -40,37 +41,26 @@ const Login = (props) => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    setMessage("");
     setLoading(true);
 
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      AuthService.login(username, password).then(
+     dispatch(login(username, password)).then(
         () => {
           props.history.push("/profile");
           window.location.reload();
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          setLoading(false);
-          setMessage(resMessage);
-        }
-      );
-    } else {
-      setLoading(false);
+        }).catch(() => {
+            setLoading(false);
+          });
+      } else {
+        setLoading(false);
+      }
     }
-  };
 
-  if(currentUser){
-    return <Redirect to="/profile"/>
-  }
+    if (isLoggedIn) {
+      return <Redirect to="/profile" />;
+    }
   return (
   <>
   

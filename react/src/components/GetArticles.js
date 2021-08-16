@@ -3,13 +3,14 @@ import { Redirect } from "react-router";
 import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
 import EventBus from "../common/EventBus";
+import { Link } from "react-router-dom";
 
-const BoardUser = () => {
+const GetArticles = () => {
   const [content, setContent] = useState([]);
   const currentUser = AuthService.getCurrentUser();
 
   useEffect(() => {
-    UserService.getUserBoard().then(
+    UserService.getArticles().then(
       (response) => {
         setContent(response.data);
       },
@@ -29,24 +30,49 @@ const BoardUser = () => {
       }
     );
   }, []);
+
+  const handleDelete = (article_id) => {
+     
+    
+     UserService.deleteArticle(article_id).then(
+        res=>{
+        setContent(content.filter(content=>content.id!==article_id))
+        })
+      }
+    
   if(!currentUser){
     return(
     <Redirect to="/login"/>
     )}
   return (
+    <>
+    <Link to="/addarticle">Add Article</Link>
     <div className="container">
-     
-        {content.map((p,key)=>
+     {content ? (
+        content.map((p,key)=>
         <> 
           <header key={key} className="jumbotron">
           <h1 >{p.title}</h1>
           <p>{p.body}</p>
+        
+          
+              <div className="form-group">
+                <button onClick={() => handleDelete(p.id)}className="btn btn-primary btn-block">Delete</button>
+              </div>
+  
           </header>
         </>
+        )):
+        
+        (
+        
+          <h1>No content here</h1>
+        
         )}
       
     </div>
+    </>
   );
 };
 
-export default BoardUser;
+export default GetArticles;
