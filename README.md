@@ -3,4 +3,9 @@
 ## Features:
 - JWT Authentication through Axios and Redux in React <br/>
 - Django Custom User Model <br/>
-- Sample Article Model to show workings of the template
+- Ability to create, retrieve and delete articles
+
+## Repos used:
+- https://github.com/veryacademy/YT-Django-DRF-Simple-Blog-Series-JWT-Part-3
+- https://github.com/bezkoder/redux-refresh-token-axios
+
