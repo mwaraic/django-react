@@ -1,4 +1,4 @@
-# Django-React-Template<br/>
+# Django-React-Boilerplate<br/>
 
 ## Features:
 - JWT Authentication through Axios and Redux in React <br/>
