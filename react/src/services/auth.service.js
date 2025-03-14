@@ -10,7 +10,6 @@ const register = (user_name, email, password) => {
 };
 
 const login = (email, password) => {
-  console.log(email, password)
   return api
     .post("/token/", {
       email,
