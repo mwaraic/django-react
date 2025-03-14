@@ -53,6 +53,8 @@ export const register = (username, email, password) => (dispatch) => {
   };
   
 export const login = (username, password) => (dispatch) => {
+    console.log(username)
+    console.log(password)
     return AuthService.login(username, password).then(
       (data) => {
         dispatch({

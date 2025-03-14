@@ -46,17 +46,16 @@ const Login = (props) => {
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-     dispatch(login(username, password)).then(
-        () => {
-          props.history.push("/profile");
-          window.location.reload();
-        }).catch(() => {
-            setLoading(false);
-          });
-      } else {
+      dispatch(login(username, password))
+      .unwrap()
+      .then(() => {
+        props.history.push("/");
+        window.location.reload();
+      })
+      .catch(() => {
         setLoading(false);
-      }
-    }
+      });
+    }}
 
     if (isLoggedIn) {
       return <Redirect to="/profile" />;

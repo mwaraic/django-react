@@ -2,8 +2,10 @@
 
 # dependencies
 /node_modules
+/__pycache__
 /.pnp
 .pnp.js
+db.sqlite3
 
 # testing
 /coverage
