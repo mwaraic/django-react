@@ -1,5 +1,11 @@
 # Django-React-Boilerplate<br/>
 
+## Getting Started
+
+   ```bash
+  make start
+   ```
+   
 ## Features:
 - JWT Authentication through Axios and Redux in React <br/>
 - Django Custom User Model <br/>
